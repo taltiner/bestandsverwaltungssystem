@@ -1,4 +1,4 @@
-package com.example.bestellservice;
+package com.example.nachbestellservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
