@@ -1,10 +1,7 @@
 package com.example.bestellservice.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +12,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Entity(name = "bestellung")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Bestellung {
     @Id
     @SequenceGenerator(

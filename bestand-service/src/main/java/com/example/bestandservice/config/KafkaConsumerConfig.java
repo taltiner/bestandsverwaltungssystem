@@ -29,7 +29,6 @@ public class KafkaConsumerConfig {
         return props;
     }
 
-    //ConsumerFactory<String, Bestellung>
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfig());

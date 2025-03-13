@@ -1,5 +1,6 @@
 package com.example.bestellservice.config;
 
+import com.example.bestellservice.dto.request.BestellungRequestDTO;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,13 +28,11 @@ public class KafkaProducerConfig {
         return props;
     }
 
-    //ProducerFactory<String, Bestellung>
     @Bean
     public ProducerFactory<String, String> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfig());
     }
 
-    //KafkaTemplate<String, Bestellung>
     @Bean
     public KafkaTemplate<String, String> kafkaTemplate(ProducerFactory<String, String> producerFactory) {
         return new KafkaTemplate<>(producerFactory);
