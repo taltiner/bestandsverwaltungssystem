@@ -21,8 +21,8 @@ public class BestellungController {
     @PostMapping
     public ResponseEntity<String> erzeugeBestellung(@RequestBody BestellungRequestDTO bestellungRequestDTO) {
         bestellService.saveBestellung(bestellungRequestDTO);
-        return ResponseEntity.ok("Bestellung erfolgreich erstellt und an Kafka gesendet.");
 
+        return ResponseEntity.ok("Bestellung erfolgreich erstellt und an Kafka gesendet.");
     }
 
 }

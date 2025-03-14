@@ -1,5 +1,6 @@
 package com.example.bestellservice.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,6 +29,7 @@ public class Bestellung {
     private Status status;
 
     @OneToMany(mappedBy = "bestellung", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<BestellPosition> positionen = new ArrayList<>();
     public Bestellung(
             List<BestellPosition> positionen,

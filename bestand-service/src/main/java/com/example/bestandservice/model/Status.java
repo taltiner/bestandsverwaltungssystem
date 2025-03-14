@@ -1,4 +1,4 @@
-package com.example.bestellservice.model;
+package com.example.bestandservice.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

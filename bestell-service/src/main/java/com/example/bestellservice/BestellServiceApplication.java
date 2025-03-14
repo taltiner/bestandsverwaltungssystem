@@ -14,13 +14,4 @@ public class BestellServiceApplication {
 		SpringApplication.run(BestellServiceApplication.class, args);
 	}
 
-/*	@Bean
-	CommandLineRunner commandLineRunner(KafkaTemplate<String, String> kafkaTemplate) {
-		return args -> {
-
-		kafkaTemplate.send("bestellung", "kafka lets go ");
-
-		};
-	}*/
-
 }
