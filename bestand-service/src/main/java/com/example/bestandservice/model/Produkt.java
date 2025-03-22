@@ -32,6 +32,8 @@ public class Produkt {
     private double preis;
     @Column(name = "gesamtMenge")
     private Integer gesamtMenge;
+    @Column(name = "mindestMenge")
+    private Integer mindestMenge;
     @Column(name = "detailInfo")
     private String detailInfo;
 

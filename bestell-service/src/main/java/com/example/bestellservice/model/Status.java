@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Status {
     ERFOLGREICH("erfolgreich"),
-    NICHTERFOLGT("nichterfolgt");
+    NICHTERFOLGT("nichterfolgt"),
+    INPRUEFUNG("inpruefung");
 
     private final String value;
 
