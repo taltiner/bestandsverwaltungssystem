@@ -1,10 +1,7 @@
 package com.example.bestandservice.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -14,6 +11,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Entity(name = "Produkt")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Produkt {
     @Id
     @SequenceGenerator(
