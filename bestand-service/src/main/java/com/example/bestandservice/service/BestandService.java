@@ -2,6 +2,9 @@ package com.example.bestandservice.service;
 
 import com.example.bestandservice.dto.request.BestandRequestDTO;
 import com.example.bestandservice.dto.request.BestellungRequestDTO;
+import com.example.bestandservice.exception.BestandPruefungException;
+import com.example.bestandservice.exception.KafkaSendException;
+import com.example.bestandservice.exception.ProduktNichtGefundenException;
 import com.example.bestandservice.model.Produkt;
 import com.example.bestandservice.model.Status;
 import com.example.bestandservice.repository.ProduktRepository;
@@ -67,34 +70,34 @@ public class BestandService {
                 Long id = position.getProduktId();
                 Integer bestellMenge = position.getMenge();
                 Produkt produktBestand = produktRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Produkt nicht gefunden"));
+                    .orElseThrow(() -> new ProduktNichtGefundenException(id));
                 Integer bestandMenge = produktBestand.getGesamtMenge();
                 Integer mindestMenge = produktBestand.getMindestMenge();
                 Integer restMenge = bestandMenge - bestellMenge;
 
             if (restMenge <= mindestMenge) {
-                System.out.println("Mindestbestand unterschritten" + (bestandMenge - bestellMenge));
-                try {
-                    bestellungRequestDTO.setStatus(Status.NICHTERFOLGT);
-                    String jsonMessage = objectMapper.writeValueAsString(bestellungRequestDTO);
-                    kafkaTemplate.send("bestellstatus", jsonMessage);
-                } catch (JsonProcessingException e) {
-                    log.error("Fehler beim Serialisieren der Bestellung: ", e);
-                }
+                log.warn("Mindestbestand für das Produkt mit der Id " + position.getProduktId() + " wurde unterschritten. Hieraus ergäbe sich eine Restmenge von: " + restMenge);
+                bestellungRequestDTO.setStatus(Status.NICHTERFOLGT);
             } else {
-                try{
-                    updateBestandMenge(id, restMenge);
-                    bestellungRequestDTO.setStatus(Status.ERFOLGREICH);
-                    String jsonMessage = objectMapper.writeValueAsString(bestellungRequestDTO);
-                    kafkaTemplate.send("bestellstatus", jsonMessage);
-                } catch (JsonProcessingException e) {
-                    log.error("Fehler beim Serialisieren der Bestellung: ", e);
-                }
-
+                updateBestandMenge(id, restMenge);
+                bestellungRequestDTO.setStatus(Status.ERFOLGREICH);
             }
-        });
+            sendeKafkaNachricht(bestellungRequestDTO);
+
+            });
+        } catch (Exception e) {
+            throw new BestandPruefungException("Fehler beim Überprüfen des Bestands", e);
+        }
+    }
+
+    private void sendeKafkaNachricht(BestellungRequestDTO bestellungRequestDTO) {
+        try {
+            String jsonMessage = objectMapper.writeValueAsString(bestellungRequestDTO);
+            kafkaTemplate.send("bestellstatus", jsonMessage);
+            log.info("Bestellstatus wurde erfolgreich an Kafka gesendet.");
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.error("Fehler beim Serialisieren der Bestellung: ", e);
+            throw new KafkaSendException("Fehler beim Senden der Kafka-Nachricht", e);
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.example.bestellservice.service;
 
 import com.example.bestellservice.dto.request.BestellungRequestDTO;
+import com.example.bestellservice.exception.KafkaSendException;
+import com.example.bestellservice.exception.UngueltigeBestellungException;
 import com.example.bestellservice.model.BestellPosition;
 import com.example.bestellservice.model.Bestellung;
 import com.example.bestellservice.repository.BestellungRepository;
@@ -30,6 +32,9 @@ public class BestellService {
     }
 
     public void saveBestellung(BestellungRequestDTO bestellungRequestDTO) {
+        if(bestellungRequestDTO.getPositionen().isEmpty()) {
+            throw new UngueltigeBestellungException("Bestellung muss mindestens eine Bestellposition enthalten");
+        }
         Bestellung bestellung = Bestellung.builder()
                         .status(bestellungRequestDTO.getStatus())
                         .positionen(new ArrayList<>())
@@ -48,11 +53,12 @@ public class BestellService {
         }
 
         try {
-            // JSON-Nachricht für Kafka serialisieren
             String jsonMessage = objectMapper.writeValueAsString(bestellungRequestDTO);
             kafkaTemplate.send("bestellung", jsonMessage);
+            log.info("Bestellstatus wurde erfolgreich an Kafka gesendet.");
         } catch (JsonProcessingException e) {
             log.error("Fehler beim Serialisieren der Bestellung: ", e);
+            throw new KafkaSendException("Fehler beim Senden der Kafka-Nachricht", e);
         }
 
     }
