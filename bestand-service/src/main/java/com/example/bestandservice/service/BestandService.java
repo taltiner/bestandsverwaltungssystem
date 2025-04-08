@@ -61,7 +61,6 @@ public class BestandService {
     }
 
     public void pruefeObMindestBestandErreicht(String bestellungNachricht) {
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
             BestellungRequestDTO bestellungRequestDTO = objectMapper.readValue(
                     bestellungNachricht,

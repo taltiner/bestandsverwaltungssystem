@@ -35,6 +35,7 @@ public class BestellService {
         if(bestellungRequestDTO.getPositionen().isEmpty()) {
             throw new UngueltigeBestellungException("Bestellung muss mindestens eine Bestellposition enthalten");
         }
+
         Bestellung bestellung = Bestellung.builder()
                         .status(bestellungRequestDTO.getStatus())
                         .positionen(new ArrayList<>())

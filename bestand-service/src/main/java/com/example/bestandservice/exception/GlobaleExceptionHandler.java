@@ -18,6 +18,7 @@ public class GlobaleExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
+    @ExceptionHandler(KafkaSendException.class)
     public ResponseEntity<String> handleKafkaSendException(KafkaSendException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
