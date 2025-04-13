@@ -22,4 +22,9 @@ public class GlobaleExceptionHandler {
     public ResponseEntity<String> handleKafkaSendException(KafkaSendException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
+
+    @ExceptionHandler(JsonMappingFailedException.class)
+    public ResponseEntity<String> handleJsonMappingFailedException(JsonMappingFailedException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
 }

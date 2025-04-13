@@ -2,6 +2,9 @@ package com.example.bestandservice;
 
 import com.example.bestandservice.service.BestandService;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,12 +17,16 @@ public class KafkaListeners {
     }
 
     @KafkaListener(
-            topics = "bestellung",
+            topics = {"bestellung", "nachbestellung"},
             groupId = "groupId"
     )
-    void listener(String data) {
+    void listener(@Payload String data, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws Exception {
 
-        System.out.println("Listener received: " + data);
-        bestandService.pruefeObMindestBestandErreicht(data);
+        System.out.println("Listener received: " + data + " from topic: " + topic);
+        if("bestellung".equals(topic)) {
+            bestandService.pruefeObMindestBestandErreicht(data);
+        } else {
+            bestandService.setMaxMenge(data);
+        }
     }
 }

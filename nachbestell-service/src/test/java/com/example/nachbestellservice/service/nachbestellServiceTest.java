@@ -3,6 +3,7 @@ package com.example.nachbestellservice.service;
 import com.example.nachbestellservice.dto.request.NachbestellungRequestDTO;
 import com.example.nachbestellservice.exception.DublicateNachbestellungException;
 import com.example.nachbestellservice.exception.JsonMappingFailedException;
+import com.example.nachbestellservice.exception.NachbestellungBereitsBeendetException;
 import com.example.nachbestellservice.exception.SaveNachbestellungException;
 import com.example.nachbestellservice.model.Nachbestellung;
 import com.example.nachbestellservice.repository.NachbestellRepository;
@@ -14,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.Optional;
@@ -47,6 +47,7 @@ public class nachbestellServiceTest {
                 .build();
 
          nachbestellung = Nachbestellung.builder()
+                 .id(2L)
                  .produktId(1L)
                  .nachbestellMenge(10)
                  .build();
@@ -104,5 +105,27 @@ public class nachbestellServiceTest {
         assertThrows(SaveNachbestellungException.class, () -> {
             nachbestellService.saveNachbestellung(json);
         });
+    }
+
+    @Test
+    public void testDeleteNachbestellung_Success() throws Exception {
+        //when
+        Long produktId = nachbestellung.getProduktId();
+        Long nachbestellungId = nachbestellung.getId();
+        System.out.println("produktId " + produktId);
+        when(nachbestellRepository.findByProduktId(produktId)).thenReturn(Optional.of(nachbestellung));
+        //then
+        nachbestellService.deleteNachbestellung(nachbestellungRequestDTO);
+        //assert
+        verify(nachbestellRepository, times(1)).deleteById(nachbestellungId);
+    }
+
+    @Test
+    public void testDeleteNachbestellung_Failure() throws Exception {
+        assertThrows(NachbestellungBereitsBeendetException.class, () -> {
+            nachbestellService.deleteNachbestellung(nachbestellungRequestDTO);
+        });
+
+        verify(nachbestellRepository, never()).deleteById(any());
     }
 }

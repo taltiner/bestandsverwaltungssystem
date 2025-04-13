@@ -2,8 +2,10 @@ package com.example.bestandservice.service;
 
 import com.example.bestandservice.dto.request.BestandRequestDTO;
 import com.example.bestandservice.dto.request.BestellungRequestDTO;
+import com.example.bestandservice.dto.request.NachbestellRequestDTO;
 import com.example.bestandservice.dto.response.NachbestellResponseDTO;
 import com.example.bestandservice.exception.BestandPruefungException;
+import com.example.bestandservice.exception.JsonMappingFailedException;
 import com.example.bestandservice.exception.KafkaSendException;
 import com.example.bestandservice.exception.ProduktNichtGefundenException;
 import com.example.bestandservice.model.Produkt;
@@ -16,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 
 @Service
@@ -55,20 +59,31 @@ public class BestandService {
         produktRepository.save(vorhandenesProdukt);
     }
 
-    public void updateBestandMenge(Long id, Integer menge) {
-        produktRepository.updateBestandMenge(id, menge);
+    public void updateBestandMenge(Long id, Integer menge) throws Exception {
+        try {
+            produktRepository.updateBestandMenge(id, menge);
+        } catch (ProduktNichtGefundenException e) {
+            throw new ProduktNichtGefundenException(id);
+        }
     }
 
     public void pruefeObMindestBestandErreicht(String bestellungNachricht) {
+        BestellungRequestDTO bestellungRequestDTO;
         try {
-            BestellungRequestDTO bestellungRequestDTO = objectMapper.readValue(
+             bestellungRequestDTO = objectMapper.readValue(
                     bestellungNachricht,
                     BestellungRequestDTO.class);
-            bestellungRequestDTO.getPositionen().forEach(position -> {
+        } catch(JsonProcessingException e) {
+            throw new JsonMappingFailedException("Ungültiges JSON", e);
+        }
+
+        bestellungRequestDTO.getPositionen().forEach(position -> {
+            try {
                 Long id = position.getProduktId();
                 Integer bestellMenge = position.getMenge();
                 Produkt produktBestand = produktRepository.findById(id)
                     .orElseThrow(() -> new ProduktNichtGefundenException(id));
+
                 Integer bestandMenge = produktBestand.getGesamtMenge();
                 Integer mindestMenge = produktBestand.getMindestMenge();
                 Integer maxMenge = produktBestand.getMaxMenge();
@@ -86,10 +101,10 @@ public class BestandService {
             }
             sendeKafkaNachricht(bestellungRequestDTO);
 
-            });
-        } catch (Exception e) {
-            throw new BestandPruefungException("Fehler beim Überprüfen des Bestands", e);
-        }
+            } catch (Exception e) {
+                throw new BestandPruefungException("Fehler beim Überprüfen des Bestands", e);
+            }
+        });
     }
 
     private void sendeKafkaNachricht(BestellungRequestDTO bestellungRequestDTO) {
@@ -112,6 +127,24 @@ public class BestandService {
             log.error("Fehler beim Serialisieren der Bestellung: ", e);
             throw new KafkaSendException("Fehler beim Senden der Kafka-Nachricht", e);
         }
+    }
+
+    public void setMaxMenge(String nachbestellNachricht) throws Exception {
+        NachbestellRequestDTO nachbestellRequestDTO;
+        try {
+             nachbestellRequestDTO = objectMapper.readValue(
+                    nachbestellNachricht,
+                    NachbestellRequestDTO.class
+            );
+        } catch (JsonProcessingException e) {
+            throw new JsonMappingFailedException("Ungültiges JSON", e);
+        }
+        Long produktId = nachbestellRequestDTO.getProduktId();
+        Produkt produkt = produktRepository.findById(produktId)
+                .orElseThrow(() -> new ProduktNichtGefundenException(produktId));
+        Integer maxMenge = produkt.getMaxMenge();
+
+        updateBestandMenge(produktId, maxMenge);
     }
 
 }

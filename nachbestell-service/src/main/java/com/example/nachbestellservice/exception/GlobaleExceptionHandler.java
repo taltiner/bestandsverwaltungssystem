@@ -22,4 +22,14 @@ public class GlobaleExceptionHandler {
     public ResponseEntity<String> handleDublicateNachbestellungException(DublicateNachbestellungException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
+
+    @ExceptionHandler(NachbestellungBereitsBeendetException.class)
+    public ResponseEntity<String> handleNachbestellungBereitsBeendetException(NachbestellungBereitsBeendetException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+    @ExceptionHandler(KafkaSendException.class)
+    public ResponseEntity<String> handleKafkaSendException(KafkaSendException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
 }
