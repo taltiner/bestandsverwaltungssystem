@@ -28,11 +28,9 @@ public class Produkt {
     private Kategorie kategorie;
     private String name;
     private double preis;
-    @Column(name = "gesamtMenge")
     private Integer gesamtMenge;
-    @Column(name = "mindestMenge")
     private Integer mindestMenge;
-    @Column(name = "detailInfo")
+    private Integer maxMenge;
     private String detailInfo;
 
     public Produkt(

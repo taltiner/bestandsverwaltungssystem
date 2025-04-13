@@ -17,4 +17,9 @@ public class KafkaTopicConfig {
     public NewTopic bestellStatusTopic() {
         return TopicBuilder.name("bestellstatus").build();
     }
+
+    @Bean
+    public NewTopic nachbestellungTopic() {
+        return TopicBuilder.name("nachbestellung").build();
+    }
 }
