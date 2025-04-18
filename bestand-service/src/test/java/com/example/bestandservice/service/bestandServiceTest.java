@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.kafka.core.KafkaTemplate;
 
-import javax.sound.sampled.Port;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -133,6 +132,7 @@ public class bestandServiceTest {
                 .detailInfo("Küchenmesser Edelstahl")
                 .gesamtMenge(gesamtMenge)
                 .mindestMenge(10)
+                .maxMenge(30)
                 .name("Santoku")
                 .preis(99.95)
                 .build();

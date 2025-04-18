@@ -1,7 +1,6 @@
 package com.example.bestellservice.control;
 
 import com.example.bestellservice.dto.request.BestellungRequestDTO;
-import com.example.bestellservice.exception.UngueltigeBestellungException;
 import com.example.bestellservice.model.BestellPosition;
 import com.example.bestellservice.model.Status;
 import com.example.bestellservice.service.BestellService;

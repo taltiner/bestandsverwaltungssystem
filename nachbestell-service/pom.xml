@@ -80,6 +80,10 @@
             <artifactId>hibernate-community-dialects</artifactId>
             <version>6.6.8.Final</version>
         </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

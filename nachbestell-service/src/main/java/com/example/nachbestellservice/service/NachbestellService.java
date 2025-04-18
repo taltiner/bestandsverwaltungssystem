@@ -62,6 +62,7 @@ public class NachbestellService {
     }
 
     private void sendeKafkaNachricht(NachbestellungRequestDTO nachbestellungRequestDTO) {
+        log.info("produktId: " + nachbestellungRequestDTO.getProduktId());
         try {
             NachbestellungResponseDTO nachbestellungResponseDTO = NachbestellungResponseDTO.builder()
                     .produktId(nachbestellungRequestDTO.getProduktId())
@@ -69,7 +70,7 @@ public class NachbestellService {
                     .build();
 
             String jsonMessage = objectMapper.writeValueAsString(nachbestellungResponseDTO);
-            kafkaTemplate.send("nachbestellung", jsonMessage);
+            kafkaTemplate.send("nachbestellung-loeschen", jsonMessage);
             log.info("Nachbestellung wurde erfolgreich an Kafka gesendet.");
         } catch (JsonProcessingException e) {
             log.error("Fehler beim Serialisieren der Bestellung: ", e);

@@ -23,7 +23,7 @@ public class Nachbestellung {
             generator = "produkt_sequence"
     )
     private Long id;
-    @Column(name = "produktId")
+    @Column(name = "produkt_id")
     private Long produktId;
     private Integer nachbestellMenge;
 }

@@ -110,7 +110,7 @@ public class nachbestellServiceTest {
     @Test
     public void testDeleteNachbestellung_Success() throws Exception {
         //when
-        Long produktId = nachbestellung.getProduktId();
+        Long produktId = nachbestellungRequestDTO.getProduktId();
         Long nachbestellungId = nachbestellung.getId();
         System.out.println("produktId " + produktId);
         when(nachbestellRepository.findByProduktId(produktId)).thenReturn(Optional.of(nachbestellung));

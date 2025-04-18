@@ -38,11 +38,15 @@ public class Produkt {
             String name,
             double preis,
             Integer gesamtMenge,
+            Integer mindestMenge,
+            Integer maxMenge,
             String detailInfo) {
         this.kategorie = kategorie;
         this.name = name;
         this.preis = preis;
         this.gesamtMenge = gesamtMenge;
+        this.mindestMenge = mindestMenge;
+        this.maxMenge = maxMenge;
         this.detailInfo = detailInfo;
     }
 

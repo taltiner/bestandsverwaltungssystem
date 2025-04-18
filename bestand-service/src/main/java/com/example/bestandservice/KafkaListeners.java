@@ -17,7 +17,7 @@ public class KafkaListeners {
     }
 
     @KafkaListener(
-            topics = {"bestellung", "nachbestellung"},
+            topics = {"bestellung", "nachbestellung-loeschen"},
             groupId = "groupId"
     )
     void listener(@Payload String data, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws Exception {
@@ -25,8 +25,10 @@ public class KafkaListeners {
         System.out.println("Listener received: " + data + " from topic: " + topic);
         if("bestellung".equals(topic)) {
             bestandService.pruefeObMindestBestandErreicht(data);
-        } else {
+        } else if("nachbestellung-loeschen".equals(topic)){
             bestandService.setMaxMenge(data);
+        } else {
+            return;
         }
     }
 }
