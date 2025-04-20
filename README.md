@@ -23,7 +23,7 @@ Ein Microservice-basiertes System zur Verwaltung von Bestellungen und Lagerbest�
 | `nachbestellservice`      | Erstellt automatische Nachbestellungen, wenn der Bestand eines Produkts unter die Mindestmenge fällt. |
 | `kafka`                   | Kafka Broker für Messaging                                                                            |
 | `zookeeper`               | Notwendig für Kafka                                                                                   |
-| `postgres`                | Datenbank zur Speicherung von Bestellungen                                                            |
+| `postgres`                | Datenbank zur Speicherung von Bestellungen, Beständen, Nachbestellungen und anderen relevanten Daten. |
 
 ---
 
