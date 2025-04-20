@@ -55,6 +55,8 @@ services:
       - POSTGRES_DB=bestellservice
     ports:
       - "5432:5432"
+    volumes:
+      - ./db-init:/docker-entrypoint-initdb.d
 
   kafka:
     image: wurstmeister/kafka

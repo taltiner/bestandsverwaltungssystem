@@ -25,7 +25,7 @@ public class BestellungController {
     public ResponseEntity<String> erzeugeBestellung(@RequestBody @Valid BestellungRequestDTO bestellungRequestDTO) {
         bestellService.saveBestellung(bestellungRequestDTO);
 
-        return ResponseEntity.ok("Bestellung erfolgreich erstellt und an Kafka gesendet.");
+        return ResponseEntity.ok("Ihre Bestellung ist erfolgreich eingegangen und wird nun geprüft.");
     }
 
 }

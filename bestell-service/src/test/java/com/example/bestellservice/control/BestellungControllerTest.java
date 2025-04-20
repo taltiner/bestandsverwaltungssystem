@@ -43,7 +43,7 @@ public class BestellungControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(bestellungDTO)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Bestellung erfolgreich erstellt und an Kafka gesendet."));
+                .andExpect(content().string("Ihre Bestellung ist erfolgreich eingegangen und wird nun geprüft."));
     }
 
     @Test
