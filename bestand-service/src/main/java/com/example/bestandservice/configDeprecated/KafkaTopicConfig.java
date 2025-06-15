@@ -1,14 +1,9 @@
-package com.example.bestandservice.config;
+package com.example.bestandservice.configDeprecated;
 
-import org.apache.kafka.clients.admin.NewTopic;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.config.TopicBuilder;
-
-@Configuration
+//@Configuration deprecated durch Apache Camel
 public class KafkaTopicConfig {
 
-    @Bean
+/*    @Bean
     public NewTopic bestellungTopic() {
         return TopicBuilder.name("bestellung").build();
     }
@@ -21,5 +16,5 @@ public class KafkaTopicConfig {
     @Bean
     public NewTopic nachbestellungTopic() {
         return TopicBuilder.name("nachbestellung").build();
-    }
+    }*/
 }

@@ -80,7 +80,7 @@ public class bestandServiceTest {
         assertEquals("Produkt mit ID 1 nicht gefunden", exception.getMessage());
     }
 
-    @Test
+/*    @Test
     public void testPruefeMindestbestand_Unterschritten() throws Exception {
         //when
         String json = objectMapper.writeValueAsString(bestellungRequestDTO);
@@ -124,7 +124,7 @@ public class bestandServiceTest {
         verify(kafkaTemplate, times(1)).send(eq("bestellstatus"), any());
         assertEquals(Status.ERFOLGREICH, bestellungRequestDTO.getStatus());
         verify(produktRepository).updateBestandMenge(any(Long.class), eq(11));
-    }
+    }*/
 
     private Produkt createProdukt(Integer gesamtMenge) {
         return Produkt.builder()

@@ -1,4 +1,4 @@
-package com.example.bestandservice.config;
+package com.example.bestandservice.configDeprecated;
 
 import com.example.bestandservice.model.Kategorie;
 import com.example.bestandservice.model.Produkt;

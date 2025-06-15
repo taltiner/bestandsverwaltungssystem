@@ -3,6 +3,7 @@ package com.example.bestandservice.service;
 import com.example.bestandservice.dto.request.BestandRequestDTO;
 import com.example.bestandservice.dto.request.BestellungRequestDTO;
 import com.example.bestandservice.dto.request.NachbestellRequestDTO;
+import com.example.bestandservice.dto.response.BestellStatusResponseDTO;
 import com.example.bestandservice.dto.response.NachbestellResponseDTO;
 import com.example.bestandservice.exception.BestandPruefungException;
 import com.example.bestandservice.exception.JsonMappingFailedException;
@@ -14,6 +15,7 @@ import com.example.bestandservice.repository.ProduktRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.apache.camel.ProducerTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -27,8 +29,8 @@ import java.util.Optional;
 public class BestandService {
 
     private final ProduktRepository produktRepository;
-
     private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ProducerTemplate producerTemplate;
     private final ObjectMapper objectMapper;
     private static final Logger log = LoggerFactory.getLogger(BestandService.class);
 
@@ -67,19 +69,24 @@ public class BestandService {
         }
     }
 
-    public void pruefeObMindestBestandErreicht(String bestellungNachricht) {
-        BestellungRequestDTO bestellungRequestDTO;
+    public void pruefeObMindestBestandErreicht(BestellungRequestDTO bestellungRequestDTO) {
+/*        BestellungRequestDTO bestellungRequestDTO;
         try {
              bestellungRequestDTO = objectMapper.readValue(
                     bestellungNachricht,
                     BestellungRequestDTO.class);
         } catch(JsonProcessingException e) {
             throw new JsonMappingFailedException("Ungültiges JSON", e);
-        }
+        }*/
 
         bestellungRequestDTO.getPositionen().forEach(position -> {
             try {
                 Long id = position.getProduktId();
+
+                BestellStatusResponseDTO bestellStatusResponseDTO = BestellStatusResponseDTO.builder()
+                        .bestellId(id)
+                        .build();
+
                 Integer bestellMenge = position.getMenge();
                 Produkt produktBestand = produktRepository.findById(id)
                     .orElseThrow(() -> new ProduktNichtGefundenException(id));
@@ -93,13 +100,15 @@ public class BestandService {
                 log.warn("Mindestbestand für das Produkt mit der Id " + position.getProduktId() + " wurde unterschritten. Hieraus ergäbe sich eine Restmenge von: " + restMenge);
                 Integer nachbestellMenge = maxMenge - restMenge;
                 NachbestellResponseDTO nachbestellResponseDTO = new NachbestellResponseDTO(id,nachbestellMenge);
-                bestellungRequestDTO.setStatus(Status.NICHTERFOLGT);
-                sendeKafkaNachricht(nachbestellResponseDTO);
+                bestellStatusResponseDTO.setStatus(Status.NICHTERFOLGT);
+                producerTemplate.sendBody("direct:sendNachbestellung", nachbestellResponseDTO);
+                //sendeKafkaNachricht(nachbestellResponseDTO);
             } else {
                 updateBestandMenge(id, restMenge);
-                bestellungRequestDTO.setStatus(Status.ERFOLGREICH);
+                bestellStatusResponseDTO.setStatus(Status.ERFOLGREICH);
             }
-            sendeKafkaNachricht(bestellungRequestDTO);
+            producerTemplate.sendBody("direct:sendBestellstatus", bestellStatusResponseDTO);
+            //sendeKafkaNachricht(bestellungRequestDTO);
 
             } catch (Exception e) {
                 throw new BestandPruefungException("Fehler beim Überprüfen des Bestands", e);
@@ -107,7 +116,7 @@ public class BestandService {
         });
     }
 
-    private void sendeKafkaNachricht(BestellungRequestDTO bestellungRequestDTO) {
+/*    private void sendeKafkaNachricht(BestellungRequestDTO bestellungRequestDTO) {
         try {
             String jsonMessage = objectMapper.writeValueAsString(bestellungRequestDTO);
             kafkaTemplate.send("bestellstatus", jsonMessage);
@@ -127,10 +136,10 @@ public class BestandService {
             log.error("Fehler beim Serialisieren der Bestellung: ", e);
             throw new KafkaSendException("Fehler beim Senden der Kafka-Nachricht", e);
         }
-    }
+    }*/
 
-    public void setMaxMenge(String nachbestellNachricht) throws Exception {
-        NachbestellRequestDTO nachbestellRequestDTO;
+    public void setMaxMenge(NachbestellRequestDTO nachbestellRequestDTO) throws Exception {
+/*        NachbestellRequestDTO nachbestellRequestDTO;
         try {
              nachbestellRequestDTO = objectMapper.readValue(
                     nachbestellNachricht,
@@ -138,7 +147,7 @@ public class BestandService {
             );
         } catch (JsonProcessingException e) {
             throw new JsonMappingFailedException("Ungültiges JSON", e);
-        }
+        }*/
         Long produktId = nachbestellRequestDTO.getProduktId();
         Produkt produkt = produktRepository.findById(produktId)
                 .orElseThrow(() -> new ProduktNichtGefundenException(produktId));

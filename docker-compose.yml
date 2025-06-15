@@ -79,3 +79,17 @@ services:
       - ZOOKEEPER_CLIENT_PORT=2181
     ports:
       - "2181:2181"
+
+  akhq:
+    image: tchiotludo/akhq
+    ports:
+      - "8085:8080"  # AKHQ läuft über http://localhost:8085
+    environment:
+      AKHQ_CONFIGURATION: |
+        akhq:
+          connections:
+            kafka-cluster:
+              properties:
+                bootstrap.servers: "kafka:9092"
+    depends_on:
+      - kafka

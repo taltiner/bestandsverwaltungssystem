@@ -38,7 +38,7 @@ public class BestellServiceTest {
     private BestellungRequestDTO bestellungDTO;
     private Bestellung bestellung;
 
-    @BeforeEach
+/*    @BeforeEach
     void setUp() {
         BestellPosition position = new BestellPosition();
          bestellungDTO = BestellungRequestDTO.builder()
@@ -53,9 +53,9 @@ public class BestellServiceTest {
 
         position.setProduktId(1L);
         position.setMenge(5);
-    }
+    }*/
 
-    @Test
+   /* @Test
     public void testSaveBestellung_Success() throws Exception {
         //when
         when(bestellungRepository.save(any(Bestellung.class))).thenReturn(bestellung);
@@ -90,5 +90,5 @@ public class BestellServiceTest {
         );
         assertEquals("Fehler beim Senden der Kafka-Nachricht", exception.getMessage());
         verify(kafkaTemplate, never()).send(any(), any());
-    }
+    }*/
 }

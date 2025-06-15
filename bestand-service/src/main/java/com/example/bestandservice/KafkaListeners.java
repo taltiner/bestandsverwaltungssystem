@@ -7,10 +7,10 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component Deprecated durch Apache Camel
 public class KafkaListeners {
 
-    private final BestandService bestandService;
+/*    private final BestandService bestandService;
 
     public KafkaListeners(BestandService bestandService) {
         this.bestandService = bestandService;
@@ -30,5 +30,5 @@ public class KafkaListeners {
         } else {
             return;
         }
-    }
+    }*/
 }

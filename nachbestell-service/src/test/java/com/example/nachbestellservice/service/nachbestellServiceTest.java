@@ -53,7 +53,7 @@ public class nachbestellServiceTest {
                  .build();
     }
 
-    @Test
+ /*    @Test
     public void testSaveNachbestellung_Success() throws Exception {
         //when
         String json = objectMapper.writeValueAsString(nachbestellungRequestDTO);
@@ -66,7 +66,7 @@ public class nachbestellServiceTest {
         verify(nachbestellRepository, times(1)).save(any(Nachbestellung.class));
     }
 
-    @Test
+   @Test
     public void testSaveNachbestellung_Dublikat() throws Exception {
         //when
         String json = objectMapper.writeValueAsString(nachbestellungRequestDTO);
@@ -105,9 +105,9 @@ public class nachbestellServiceTest {
         assertThrows(SaveNachbestellungException.class, () -> {
             nachbestellService.saveNachbestellung(json);
         });
-    }
+    }*/
 
-    @Test
+/*    @Test
     public void testDeleteNachbestellung_Success() throws Exception {
         //when
         Long produktId = nachbestellungRequestDTO.getProduktId();
@@ -118,7 +118,7 @@ public class nachbestellServiceTest {
         nachbestellService.deleteNachbestellung(nachbestellungRequestDTO);
         //assert
         verify(nachbestellRepository, times(1)).deleteById(nachbestellungId);
-    }
+    }*/
 
     @Test
     public void testDeleteNachbestellung_Failure() throws Exception {

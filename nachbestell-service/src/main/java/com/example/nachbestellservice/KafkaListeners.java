@@ -4,10 +4,10 @@ import com.example.nachbestellservice.service.NachbestellService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component - Deprecated durch Apache Camel
 public class KafkaListeners {
 
-    private final NachbestellService nachbestellService;
+/*    private final NachbestellService nachbestellService;
 
     public KafkaListeners(NachbestellService nachbestellService) {
         this.nachbestellService = nachbestellService;
@@ -21,5 +21,5 @@ public class KafkaListeners {
 
         System.out.println("Nachbestellung Listener received: " + data);
         nachbestellService.saveNachbestellung(data);
-    }
+    }*/
 }
